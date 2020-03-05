@@ -10,10 +10,6 @@ int     findRacine(int i){
     return (findRacine(travailleurs[i]));
 }
 
-int     unir(int attaquant, int cible){
-    travailleurs[findRacine(cible)] = findRacine(attaquant);
-}
-
 void    findChef(int i){
     cout << i << " ";
     if (i == travailleurs[i])
@@ -33,7 +29,7 @@ int     main(void){
             cout << endl;
         }
         else if (findRacine(attaquant) != findRacine(cible))
-            unir(attaquant, cible);
+            travailleurs[findRacine(cible)] = findRacine(attaquant);
     }
     return (0);
 }
