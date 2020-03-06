@@ -4,10 +4,16 @@ using namespace std;
 
 int     nbElements, elements[1000];
 
+void    afficher(int taille, int *tab){
+    for (int i = 0 ; i < taille ; i++)
+        cout << tab[i] << " ";
+    cout << endl;
+}
+
 int     *triFusion(int taille, int *tab){
-    if (taille == 1)
+    if (taille <= 1)
         return (tab);
-    int     resultat[taille];
+    int     *resultat = new int[taille];
     int     tailleGauche = taille / 2, gauche[tailleGauche], iGauche = 0;
     int     tailleDroite = taille - tailleGauche, droite[tailleDroite], iDroite = 0;
     for (int i = 0 ; i < tailleGauche ; i++)
@@ -17,13 +23,18 @@ int     *triFusion(int taille, int *tab){
     int     *trieGauche = triFusion(tailleGauche, gauche);
     int     *trieDroite = triFusion(tailleDroite, droite);
     for (int i = 0 ; i < taille ; i++){
-        if (iGauche < tailleGauche && gauche[iGauche] <= droite[iDroite])
-            resultat[i] = gauche[iGauche++];
-        else if (iDroite < tailleDroite && droite[iDroite] <= gauche[iGauche])
-            resultat[i] = droite[iDroite++];
+        if (iGauche < tailleGauche && iDroite < tailleDroite){
+            if (trieGauche[iGauche] < trieDroite[iDroite])
+                resultat[i] = trieGauche[iGauche++];
+            else
+                resultat[i] = trieDroite[iDroite++];
+        }
+        else if (iGauche < tailleGauche)
+            resultat[i] = trieGauche[iGauche++];
+        else if (iDroite < tailleDroite)
+            resultat[i] = trieDroite[iDroite++];
     }
-    int     *valeurRetour = resultat;
-    return (valeurRetour);
+    return (resultat);
 }
 
 int     main(void){
@@ -35,10 +46,3 @@ int     main(void){
         cout << elementsTries[i] << " ";
     return (0);
 }
-
-/*
-
-5
-7 3 0 10 2
-
-*/
