@@ -2,43 +2,43 @@
 
 using namespace std;
 
-int     sizeArray, array[10000];
+int     nbElements, elements[1000];
 
-void    afficher(int    size, int   tab[]){
-    for (int i = 0 ; i <= size ; i++)
-        cout << tab[i] << " ";
-    cout << endl;
+int     *triFusion(int taille, int *tab){
+    if (taille == 1)
+        return (tab);
+    int     resultat[taille];
+    int     tailleGauche = taille / 2, gauche[tailleGauche], iGauche = 0;
+    int     tailleDroite = taille - tailleGauche, droite[tailleDroite], iDroite = 0;
+    for (int i = 0 ; i < tailleGauche ; i++)
+        gauche[i] = tab[i];
+    for (int i = 0 ; i < tailleDroite ; i++)
+        droite[i] = tab[tailleGauche + i];
+    int     *trieGauche = triFusion(tailleGauche, gauche);
+    int     *trieDroite = triFusion(tailleDroite, droite);
+    for (int i = 0 ; i < taille ; i++){
+        if (iGauche < tailleGauche && gauche[iGauche] <= droite[iDroite])
+            resultat[i] = gauche[iGauche++];
+        else if (iDroite < tailleDroite && droite[iDroite] <= gauche[iGauche])
+            resultat[i] = droite[iDroite++];
+    }
+    int     *valeurRetour = resultat;
+    return (valeurRetour);
 }
 
-int   *triFusion(int begin, int end){
-    if (end - begin == 0)
-        return (array);
-    int     middle = begin + (end - begin) / 2;
-    int     *left = triFusion(begin, middle);
-    int     *right = triFusion(middle + 1, end);
-    int     sizeLeft = middle - begin + 1, sizeRight = end - middle + 1, iLeft = 0, iRight = 0;
-    int     sortedTab[100000];
-    for (int i = 0 ; i <= end - begin ; i++){
-        if (left[iLeft] <= right[iRight])
-            sortedTab[i] = left[iLeft++];
-        else
-            sortedTab[i] = right[iRight++];
-    }
-    return (sortedTab);
-} 
-
 int     main(void){
-    cin >> sizeArray;
-    for (int i = 0 ; i < sizeArray ; i++)
-        cin >> array[i];
-    int     *sorted = triFusion(0, sizeArray - 1);
-    afficher(sizeArray, sorted);
-    return (0); 
+    cin >> nbElements;
+    for (int i = 0 ; i < nbElements ; i++)
+        cin >> elements[i];
+    int     *elementsTries = triFusion(nbElements, elements);
+    for (int i = 0 ; i < nbElements ; i++)
+        cout << elementsTries[i] << " ";
+    return (0);
 }
 
 /*
 
 5
-1 20 3 7 5
+7 3 0 10 2
 
 */
