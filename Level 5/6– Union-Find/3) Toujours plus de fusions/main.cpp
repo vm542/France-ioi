@@ -8,7 +8,7 @@ int     findRacine(int i){
     if (i == travailleurs[i])
         return (i);
     travailleurs[i] = findRacine(travailleurs[i]);
-    return (findRacine(travailleurs[i]));
+    return ((travailleurs[i]));
 }
 
 void    unir(int num1, int num2){
