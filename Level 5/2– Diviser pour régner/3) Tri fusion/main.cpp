@@ -1,48 +1,42 @@
-#include <iostream>
+#include <stdio.h>
 
-using namespace std;
-
-int     nbElements, elements[1000];
-
-void    afficher(int taille, int *tab){
-    for (int i = 0 ; i < taille ; i++)
-        cout << tab[i] << " ";
-    cout << endl;
+void    merge(int array[], int l, int middle, int r){
+    int     leftSize = middle - l + 1, rightSize = r - middle;
+    int     iLeft = 0, iRight = 0, index = l;
+    int     left[leftSize], right[rightSize];
+    
+    for (int i = 0 ; i < leftSize ; i++)
+        left[i] = array[l + i];
+    for (int i = 0 ; i < rightSize ; i++)
+        right[i] = array[middle + i + 1];
+    while (iLeft < leftSize && iRight < rightSize){
+        if (left[iLeft] <= right[iRight])
+            array[index++] = left[iLeft++];
+        else
+            array[index++] = right[iRight++];
+    }
+    while (iLeft < leftSize)
+        array[index++] = left[iLeft++];
+    while (iRight < rightSize)
+        array[index++] = right[iRight++];
 }
 
-int     *triFusion(int taille, int *tab){
-    if (taille <= 1)
-        return (tab);
-    int     *resultat = new int[taille];
-    int     tailleGauche = taille / 2, gauche[tailleGauche], iGauche = 0;
-    int     tailleDroite = taille - tailleGauche, droite[tailleDroite], iDroite = 0;
-    for (int i = 0 ; i < tailleGauche ; i++)
-        gauche[i] = tab[i];
-    for (int i = 0 ; i < tailleDroite ; i++)
-        droite[i] = tab[tailleGauche + i];
-    int     *trieGauche = triFusion(tailleGauche, gauche);
-    int     *trieDroite = triFusion(tailleDroite, droite);
-    for (int i = 0 ; i < taille ; i++){
-        if (iGauche < tailleGauche && iDroite < tailleDroite){
-            if (trieGauche[iGauche] < trieDroite[iDroite])
-                resultat[i] = trieGauche[iGauche++];
-            else
-                resultat[i] = trieDroite[iDroite++];
-        }
-        else if (iGauche < tailleGauche)
-            resultat[i] = trieGauche[iGauche++];
-        else if (iDroite < tailleDroite)
-            resultat[i] = trieDroite[iDroite++];
+void    mergeSort(int array[], int left, int right){
+    if (left < right){
+        int     middle = left + (right - left) / 2;
+        mergeSort(array, left, middle);
+        mergeSort(array, middle + 1, right);
+        merge(array, left, middle, right);
     }
-    return (resultat);
 }
 
 int     main(void){
-    cin >> nbElements;
+    int     nbElements, elements[100001];
+    scanf("%d", &nbElements);
     for (int i = 0 ; i < nbElements ; i++)
-        cin >> elements[i];
-    int     *elementsTries = triFusion(nbElements, elements);
-    for (int i = 0 ; i < nbElements ; i++)
-        cout << elementsTries[i] << " ";
+        scanf("%d", &elements[i]);
+    mergeSort(elements, 0, nbElements - 1);
+    for (int i = 0 ; i < nbElements; i++)
+        printf("%d ", elements[i]);
     return (0);
 }
