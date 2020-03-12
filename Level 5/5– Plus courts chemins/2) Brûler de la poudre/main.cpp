@@ -45,7 +45,7 @@ int     main(void){
         Noeud   current = fileAttente.front();
         fileAttente.pop();
         int     currValeur = current.valeurMin;
-        for (int i = 0 ; i < current.voisins.size() ; i++){
+        for (unsigned int i = 0 ; i < current.voisins.size() ; i++){
             int     aAjouter = current.voisins.at(i).longueur;
             int     iVoisin = current.voisins.at(i).voisin;
             if (intersections[iVoisin].valeurMin == -1 || currValeur + aAjouter < intersections[iVoisin].valeurMin){
@@ -57,7 +57,9 @@ int     main(void){
         }
     }
     qsort(distances, nbIntersections + 1, 2 * sizeof(int), cmp);
+    printf("%d %d\n", 0, numSortie);
     for (int i = 1 ; i <= nbIntersections ; i++)
-        printf("%d %d\n", distances[i][0], distances[i][1]);
+        if (distances[i][1] != numSortie)
+            printf("%d %d\n", distances[i][0], distances[i][1]);
     return (0);
 }
