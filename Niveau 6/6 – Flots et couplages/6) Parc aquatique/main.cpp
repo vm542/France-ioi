@@ -38,8 +38,10 @@ int main(void){
     }
     while (existeChemin(1)){
         maxFlot += minFlot;
-        for (unsigned int i = 0 ; i < chemin.size() ; i++)
+        for (unsigned int i = 0 ; i < chemin.size() ; i++){
             jonctions[chemin[i].first][chemin[i].second] -= minFlot;
+            jonctions[chemin[i].second][chemin[i].first] += minFlot;
+        }
         minFlot = MAX_CAPACITE;
         for (int i = 1 ; i <= MAX_NB_TUYAUX ; i++)
             visite[i] = 0;
