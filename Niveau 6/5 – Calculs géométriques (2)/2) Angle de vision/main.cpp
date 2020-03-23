@@ -45,8 +45,9 @@ int main(void){
         Droite  droite1 = Droite(tour, extr1);
         Droite  droite2 = Droite(tour, extr2);
         Droite  droite3 = Droite(extr1, extr2);
-        //double  angle = abs(acos(droite1.scalaire(droite2) / (droite1.longeur() * droite2.longeur())) * (180 / M_PI));
         double  angle = acos((pow(droite1.longeur(), 2) + (pow(droite2.longeur(), 2)) - (pow(droite3.longeur(), 2))) / (2 * droite1.longeur() * droite2.longeur())) * (180 / M_PI);
+        if ((droite3.point1.x == tour.x && droite3.point1.y == tour.y) || (droite3.point2.x == tour.x && droite3.point2.y == tour.y))
+            angle = 0;
         if (angle < min){
             min = angle;
             minDroite = Droite(extr1, extr2);
@@ -55,3 +56,11 @@ int main(void){
     printf("%d %d %d %d", minDroite.point1.x, minDroite.point1.y, minDroite.point2.x, minDroite.point2.y);
     return (0);
 }
+
+/*
+2 2
+1
+2 2
+3 3
+
+*/
