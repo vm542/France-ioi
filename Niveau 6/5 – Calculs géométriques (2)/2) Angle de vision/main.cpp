@@ -56,11 +56,3 @@ int main(void){
     printf("%d %d %d %d", minDroite.point1.x, minDroite.point1.y, minDroite.point2.x, minDroite.point2.y);
     return (0);
 }
-
-/*
-2 2
-1
-2 2
-3 3
-
-*/
