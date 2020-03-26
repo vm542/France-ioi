@@ -1,51 +1,70 @@
 #include <stdio.h>
 #include <vector>
-#include <algorithm>
 
-#define MAX_NB_INTER 100000
+#define MAX_NB_SENTIERS 100001
+#define MAX_NB_INTERSECTIONS 10001
 
 using namespace std;
 
-struct  Intersection{
-    vector<int> voisins;
-    int     atteint = 1, visite = 0;
-};
+int nbIntersections, nbSentiers;
+vector<int> intersections[MAX_NB_SENTIERS];
+vector<int> intersectionsInverse[MAX_NB_SENTIERS];
+int visite[MAX_NB_SENTIERS];
+int mere, nbMeres = 0;
 
-int nbIntersections, nbChemins;
-int nbPossible = 0, possible[MAX_NB_INTER + 1];
-Intersection    intersections[MAX_NB_INTER + 1];
+void    initialiser(){
+    for (int i = 0 ; i < MAX_NB_SENTIERS ; i++)
+        visite[i] = 0;
+}
 
-void    parcourir(int indice){
-    intersections[indice].visite = 1;
-    nbParcouru++;
-    for (unsigned int i = 0 ; i < intersections[indice].voisins.size() ; i++){
-        if (!intersections[intersections[indice].voisins[i]].visite){
-            parcourir(intersections[indice].voisins[i]);
+void    parcourir(int iInter){
+    visite[iInter] = 1;
+    for (unsigned int i = 0 ; i < intersections[iInter].size() ; i++)
+        if (!visite[intersections[iInter][i]])
+            parcourir(intersections[iInter][i]);
+}
+
+int trouverMere(){
+    int     dernierTrouve = 0;
+    for (int i = 1 ; i <= nbIntersections ; i++)
+        if (!visite[i]){
+            parcourir(i);
+            dernierTrouve = i;
         }
-    }
+    initialiser();
+    parcourir(dernierTrouve);
+    for (int i = 1 ; i <= nbIntersections ; i++)
+        if (!visite[i])
+            return (0);
+    return (dernierTrouve);
+}
+
+void    parcourirInverse(int iInter){
+    visite[iInter] = 1;
+    for (unsigned int i = 0 ; i < intersectionsInverse[iInter].size() ; i++)
+        if (visite[intersectionsInverse[iInter][i]] == 0)
+            parcourirInverse(intersectionsInverse[iInter][i]);
 }
 
 int main(void){
-    scanf("%d%d", &nbIntersections, &nbChemins);
-    for (int i = 0 ; i < nbChemins ; i++){
-        int depart, arrivee;
-        scanf("%d%d", &depart, &arrivee);
-        intersections[depart].voisins.push_back(arrivee);
+    scanf("%d%d", &nbIntersections, &nbSentiers);
+    for (int i = 0 ; i < nbSentiers ; i++){
+        int debut, arrivee;
+        scanf("%d%d", &debut, &arrivee);
+        intersections[debut].push_back(arrivee);
+        intersectionsInverse[arrivee].push_back(debut);
     }
-    for (int i = 1 ; i <= nbIntersections ; i++){
-        for (int j = 1 ; j <= nbIntersections ; j++)
-            intersections[j].visite = 0;
-        nbParcouru = 0;
-        parcourir(i);
-        if (nbParcouru == nbIntersections){
-            intersections[i].possible = 1;
-            possible[nbPossible] = i;
-            nbPossible++;
-        }
+    mere = trouverMere();
+    initialiser();
+    if (mere != 0){
+        parcourirInverse(mere);
+        for (int i = 1 ; i <= nbIntersections ; i++)
+            if (visite[i] == 1)
+                nbMeres++;
     }
-    sort(possible, possible + nbPossible);
-    printf("%d\n", nbPossible);
-    for (int i = 0 ; i < nbPossible ; i++)
-        printf("%d ", possible[i]);
+    printf("%d\n", nbMeres);
+    for (int i = 1 ; i <= nbIntersections ; i++)
+        if (visite[i] == 1)
+            printf("%d ", i);
     return (0);
 }
