@@ -29,6 +29,9 @@ int existeChemin(int indice){
     return (0);
 }
 
+vector<int> chemins[500];
+int     nbChemins = 0;
+
 int main(void){
     scanf("%d%d", &nbJonctions, &nbTuyaux);
     for (int i = 0 ; i < nbTuyaux ; i++){
@@ -38,15 +41,30 @@ int main(void){
     }
     while (existeChemin(1)){
         maxFlot += minFlot;
+        printf("%d ", chemin[0].second);
+        chemins[nbChemins].push_back(chemin[0].second);
         for (unsigned int i = 0 ; i < chemin.size() ; i++){
+            chemins[nbChemins++].push_back(chemin[i].first);
             jonctions[chemin[i].first][chemin[i].second] -= minFlot;
             jonctions[chemin[i].second][chemin[i].first] += minFlot;
         }
+        nbChemins++;
         minFlot = MAX_CAPACITE;
         for (int i = 1 ; i <= MAX_NB_TUYAUX ; i++)
             visite[i] = 0;
         chemin.erase(chemin.begin(), chemin.end());
     }
-    printf("%d", maxFlot);
+    //printf("%d", maxFlot);
     return (0);
 }
+
+/*
+
+4 5 
+1 2 1
+2 3 1
+2 4 1
+3 4 1
+1 3 1
+
+*/
